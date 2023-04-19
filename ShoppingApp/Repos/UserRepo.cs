@@ -54,7 +54,18 @@ namespace ShoppingApp.Repos
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(userDto.Password);
 
 
-            var userRole = await _context.userRoles.FirstOrDefaultAsync(r => r.RoleName == "User");
+              var userRole = await _context.userRoles.FirstOrDefaultAsync(r => r.RoleName == "User");
+
+            /*var userRole;
+            if (userDto.RoleName.ToLower() == "user")
+            {
+                userRole = await _context.userRoles.FirstOrDefaultAsync(r => r.RoleName == "User");
+            }
+
+            if (userDto.RoleName.ToLower() == "admin")
+            {
+                userRole = await _context.userRoles.FirstOrDefaultAsync(r => r.RoleName == "User");
+            }*/
 
             var user = new User
             {

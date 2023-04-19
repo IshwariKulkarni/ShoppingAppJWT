@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingApp.Dto;
 using ShoppingApp.Models;
@@ -7,9 +8,10 @@ using ShoppingApp.Repos;
 namespace ShoppingApp.Controllers
 {
 
-
+   
     [ApiController]
     [Route("[controller]")]
+    //[Authorize(Policy = "AdminOnly")]
     public class ProductController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
@@ -55,6 +57,27 @@ namespace ShoppingApp.Controllers
         {
             await _productRepository.DeleteAsync(id);
             return Ok();
+        }
+
+        [HttpGet("search/{ProductName}")]
+        public async Task<ActionResult<IEnumerable<Product>>> Search(string ProductName)
+        {
+            try
+            {
+                var result = await _productRepository.Search(ProductName);
+                if (result.Any())
+                {
+                    return Ok(result);
+                }
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError,
+                    "Error in Retrieving Data from Database");
+
+            }
+
         }
     }
 

@@ -38,9 +38,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminPolicy", policy =>
+    options.AddPolicy("AdminOnly", policy =>
     {
-        policy.RequireRole("2");
+        policy.RequireRole("Admin");
+    });
+    options.AddPolicy("UserOnly", policy =>
+    {
+        policy.RequireRole("User");
     });
 });
 
@@ -59,6 +63,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -12,6 +12,8 @@ namespace ShoppingApp.Repos
         Task<Product> Create(ProductDto product);
         Task UpdateProduct(int id, ProductDto prod);
         Task DeleteAsync(int id);
+
+        Task<IEnumerable<Product>> Search(string ProductName);
     }
 
     public class ProductRepository : IProductRepository
@@ -103,6 +105,17 @@ namespace ShoppingApp.Repos
         public Task UpdateAsync(ProductDto product)
         {
             throw new NotImplementedException();
+        }
+
+
+        public async Task<IEnumerable<Product>> Search(string ProductName)
+        {
+            IQueryable<Product> query = _dbContext.products;
+            if (!string.IsNullOrEmpty(ProductName))
+            {
+                query = query.Where(a => a.ProductName.Contains(ProductName));
+            }
+            return await query.ToListAsync();
         }
     }
 
